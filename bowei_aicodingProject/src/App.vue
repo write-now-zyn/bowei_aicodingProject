@@ -42,7 +42,7 @@ function formatTime(value) {
 
 <template>
   <main class="dashboard-shell">
-    <section class="hero-panel" aria-labelledby="page-title">
+    <section class="hero-card glass-card" aria-labelledby="page-title">
       <div class="hero-copy">
         <p class="eyebrow">Workspace Feed</p>
         <h1 id="page-title">即时动态</h1>
@@ -50,22 +50,25 @@ function formatTime(value) {
       </div>
 
       <div class="stats-grid" aria-label="动态统计">
-        <div class="stat-card">
+        <div class="stat-card mini-card">
           <span class="stat-value">{{ postCount }}</span>
           <span class="stat-label">条动态</span>
         </div>
-        <div class="stat-card">
+        <div class="stat-card mini-card">
           <span class="stat-value">{{ hasPosts ? "已同步" : "待开始" }}</span>
           <span class="stat-label">当前状态</span>
         </div>
       </div>
     </section>
 
-    <section class="workspace-grid">
-      <section class="composer glass-panel" aria-labelledby="composer-title">
+    <section class="bento-grid">
+      <section class="composer glass-card" aria-labelledby="composer-title">
         <div class="section-heading">
-          <span class="section-kicker">Compose</span>
-          <h2 id="composer-title">发布动态</h2>
+          <div>
+            <span class="section-kicker">Compose</span>
+            <h2 id="composer-title">发布动态</h2>
+          </div>
+          <span class="section-badge">280 字</span>
         </div>
 
         <form novalidate @submit.prevent="publishPost">
@@ -96,7 +99,7 @@ function formatTime(value) {
         </form>
       </section>
 
-      <section class="feed glass-panel" aria-labelledby="feed-title">
+      <section class="feed glass-card" aria-labelledby="feed-title">
         <div class="section-heading feed-heading">
           <div>
             <span class="section-kicker">Timeline</span>
