@@ -1,77 +1,113 @@
 import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 
-export const STORAGE_KEY = "local-feed-posts";
 const EMPTY_MESSAGE = "请输入动态内容。";
-const SAVE_ERROR_MESSAGE = "保存失败，请检查浏览器存储权限。";
+const LOAD_ERROR_MESSAGE = "加载动态失败。";
+const PUBLISH_ERROR_MESSAGE = "发布失败，请稍后重试。";
 
 export const useFeedStore = defineStore("feed", () => {
-  const posts = ref(loadPosts());
+  const posts = ref([]);
+  const isLoading = ref(false);
+  const isPosting = ref(false);
   const postCount = computed(() => posts.value.length);
 
-  function addPost(content) {
+  async function loadPosts() {
+    isLoading.value = true;
+
+    try {
+      const response = await fetch("/api/posts");
+      const data = await readResponseJson(response);
+
+      if (!response.ok) {
+        return { ok: false, message: getResponseMessage(data, LOAD_ERROR_MESSAGE) };
+      }
+
+      if (!isValidPostsPayload(data)) {
+        posts.value = [];
+        return { ok: false, message: LOAD_ERROR_MESSAGE };
+      }
+
+      posts.value = data.posts;
+      return { ok: true, posts: posts.value };
+    } catch (error) {
+      return { ok: false, message: LOAD_ERROR_MESSAGE };
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  async function addPost(content) {
     const normalizedContent = content.trim();
 
     if (!normalizedContent) {
       return { ok: false, message: EMPTY_MESSAGE };
     }
 
-    const nextPost = {
-      id: createPostId(),
-      content: normalizedContent,
-      createdAt: new Date().toISOString(),
-    };
-    const previousPosts = posts.value;
-
-    posts.value = [nextPost, ...posts.value];
+    isPosting.value = true;
 
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(posts.value));
-      return { ok: true, message: "发布成功。", post: nextPost };
+      const response = await fetch("/api/posts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: normalizedContent }),
+      });
+      const data = await readResponseJson(response);
+
+      if (!response.ok) {
+        return {
+          ok: false,
+          message: getResponseMessage(data, PUBLISH_ERROR_MESSAGE),
+        };
+      }
+
+      if (!isValidPost(data?.post)) {
+        return { ok: false, message: PUBLISH_ERROR_MESSAGE };
+      }
+
+      posts.value = [data.post, ...posts.value];
+      return {
+        ok: true,
+        message: getResponseMessage(data, "发布成功。"),
+        post: data.post,
+      };
     } catch (error) {
-      posts.value = previousPosts;
-      return { ok: false, message: SAVE_ERROR_MESSAGE };
+      return { ok: false, message: PUBLISH_ERROR_MESSAGE };
+    } finally {
+      isPosting.value = false;
     }
   }
 
   return {
     posts,
+    isLoading,
+    isPosting,
     postCount,
+    loadPosts,
     addPost,
   };
 });
 
-function loadPosts() {
+async function readResponseJson(response) {
   try {
-    const storedPosts = localStorage.getItem(STORAGE_KEY);
-    if (!storedPosts) {
-      return [];
-    }
-
-    const parsedPosts = JSON.parse(storedPosts);
-    if (!Array.isArray(parsedPosts)) {
-      return [];
-    }
-
-    return parsedPosts.filter(isValidPost);
+    return await response.json();
   } catch (error) {
-    return [];
+    return null;
   }
 }
 
 function isValidPost(post) {
   return (
     post &&
-    typeof post.id === "string" &&
+    (typeof post.id === "string" || typeof post.id === "number") &&
     typeof post.content === "string" &&
     typeof post.createdAt === "string"
   );
 }
 
-function createPostId() {
-  if (globalThis.crypto?.randomUUID) {
-    return globalThis.crypto.randomUUID();
-  }
+function isValidPostsPayload(data) {
+  return Array.isArray(data?.posts) && data.posts.every(isValidPost);
+}
 
-  return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+function getResponseMessage(data, fallback) {
+  return typeof data?.message === "string" && data.message ? data.message : fallback;
 }

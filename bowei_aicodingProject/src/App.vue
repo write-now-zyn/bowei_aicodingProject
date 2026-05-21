@@ -1,11 +1,11 @@
 <script setup>
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useFeedStore } from "./stores/feed";
 
 const MAX_LENGTH = 280;
 const feedStore = useFeedStore();
-const { posts, postCount } = storeToRefs(feedStore);
+const { posts, postCount, isLoading, isPosting } = storeToRefs(feedStore);
 
 const draft = ref("");
 const statusMessage = ref("");
@@ -14,8 +14,21 @@ const statusType = ref("");
 const remainingLabel = computed(() => `${draft.value.length} / ${MAX_LENGTH}`);
 const hasPosts = computed(() => postCount.value > 0);
 
-function publishPost() {
-  const result = feedStore.addPost(draft.value);
+onMounted(async () => {
+  const result = await feedStore.loadPosts();
+
+  if (!result.ok) {
+    statusMessage.value = result.message;
+    statusType.value = "error";
+  }
+});
+
+async function publishPost() {
+  if (isPosting.value) {
+    return;
+  }
+
+  const result = await feedStore.addPost(draft.value);
   statusMessage.value = result.message;
   statusType.value = result.ok ? "success" : "error";
 
@@ -93,7 +106,9 @@ function formatTime(value) {
             </p>
             <div class="actions">
               <span class="counter">{{ remainingLabel }}</span>
-              <button type="submit">发布</button>
+              <button type="submit" :disabled="isPosting">
+                {{ isPosting ? "发布中..." : "发布" }}
+              </button>
             </div>
           </div>
         </form>
@@ -108,7 +123,8 @@ function formatTime(value) {
           <span class="feed-count">{{ postCount }} 条</span>
         </div>
 
-        <p v-if="!hasPosts" class="empty-state">还没有内容，发布第一条吧。</p>
+        <p v-if="isLoading" class="empty-state">动态加载中...</p>
+        <p v-else-if="!hasPosts" class="empty-state">还没有内容，发布第一条吧。</p>
 
         <ul v-else class="post-list">
           <li v-for="post in posts" :key="post.id" class="post-card">

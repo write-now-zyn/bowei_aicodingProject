@@ -1,6 +1,6 @@
 # 即时动态
 
-一个使用 Vue 3、Pinia 和 Local Storage 实现的本地动态记录应用。项目用于记录进展、想法或待同步事项，数据只保存在当前浏览器本地。
+一个使用 Vue 3、Pinia、Hono 和内存存储实现的动态记录应用。项目用于记录进展、想法或待同步事项。
 
 ## 技术栈
 
@@ -8,7 +8,8 @@
 - Pinia
 - Vite
 - Vitest
-- Local Storage
+- Hono
+- 内存存储
 
 ## 功能
 
@@ -16,7 +17,7 @@
 - 查看动态列表
 - 新动态置顶展示
 - 空内容校验
-- 刷新页面后保留本地数据
+- 通过 REST API 读取和发布动态
 
 ## 本地运行
 
@@ -24,6 +25,8 @@
 npm install
 npm run dev
 ```
+
+`npm run dev` 会同时启动 Hono API 服务和 Vite 前端。API 默认监听 `http://localhost:3000`，前端通过 Vite 代理访问 `/api`。
 
 ## 测试和构建
 
@@ -34,4 +37,4 @@ npm run build
 
 ## 数据存储
 
-动态数据保存在浏览器 `localStorage` 中，key 为 `local-feed-posts`。清理浏览器站点数据会删除本地动态。
+动态数据保存在 Hono 服务进程的内存中。重启 API 服务会清空当前动态。
