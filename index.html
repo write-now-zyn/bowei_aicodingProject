@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>简单微博</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="app-header">
+        <div>
+          <p class="eyebrow">Mini Weibo</p>
+          <h1>简单微博</h1>
+        </div>
+        <span class="post-count" id="post-count">0 条</span>
+      </header>
+
+      <section class="composer" aria-labelledby="composer-title">
+        <h2 id="composer-title">发布微博</h2>
+        <form id="post-form" novalidate>
+          <label class="sr-only" for="post-content">微博内容</label>
+          <textarea
+            id="post-content"
+            name="content"
+            rows="5"
+            maxlength="280"
+            placeholder="分享一点新鲜事..."
+          ></textarea>
+          <div class="form-footer">
+            <p class="message" id="form-message" role="status" aria-live="polite"></p>
+            <div class="actions">
+              <span class="counter" id="content-counter">0 / 280</span>
+              <button type="submit">发布</button>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <section class="feed" aria-labelledby="feed-title">
+        <h2 id="feed-title">微博列表</h2>
+        <ul class="post-list" id="post-list"></ul>
+        <p class="empty-state" id="empty-state">还没有微博，发布第一条吧。</p>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
