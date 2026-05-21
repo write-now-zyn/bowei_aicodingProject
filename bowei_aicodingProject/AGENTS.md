@@ -25,13 +25,16 @@ npm run build
 http://127.0.0.1:5173
 ```
 
-如果端口被占用：
+`npm run dev` 会同时启动 Hono API 服务和 Vite 前端。默认从 API `3000`、前端 `5173` 开始使用端口；如果端口被占用，脚本会自动向后查找空闲端口，并把 Vite 代理同步到实际 API 端口。
+
+也可以手动指定端口：
 
 ```powershell
 npm run dev -- --port 5174
+$env:API_PORT=3001; npm run dev
 ```
 
-不要把端口占用误判为代码错误。必要时先用 `netstat -ano | Select-String ':5173'` 查占用进程。
+不要把端口占用误判为代码错误。必要时先用 `netstat -ano | Select-String ':5173'` 或 `netstat -ano | Select-String ':3000'` 查占用进程。
 
 ## Vue / Pinia / TDD 约定
 - 功能逻辑优先写在 Pinia store，UI 组件只做展示和交互编排。

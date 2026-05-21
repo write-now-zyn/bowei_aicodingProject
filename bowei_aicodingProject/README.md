@@ -26,7 +26,15 @@ npm install
 npm run dev
 ```
 
-`npm run dev` 会同时启动 Hono API 服务和 Vite 前端。API 默认监听 `http://localhost:3000`，前端通过 Vite 代理访问 `/api`。
+`npm run dev` 会同时启动 Hono API 服务和 Vite 前端。API 默认监听 `http://127.0.0.1:3000`，前端通过 Vite 代理访问 `/api`。
+如果默认端口被占用，开发脚本会自动从 API `3000`、前端 `5173` 开始向后查找空闲端口，适合多个 git worktree 同时运行。
+
+也可以手动指定端口：
+
+```powershell
+npm run dev -- --port 5174
+$env:API_PORT=3001; npm run dev
+```
 
 ## 测试和构建
 
