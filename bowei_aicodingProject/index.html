@@ -4,46 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>即时动态</title>
-    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <main class="app-shell">
-      <header class="app-header">
-        <div>
-          <p class="eyebrow">Workspace Feed</p>
-          <h1>即时动态</h1>
-        </div>
-        <span class="post-count" id="post-count">0 条</span>
-      </header>
-
-      <section class="composer" aria-labelledby="composer-title">
-        <h2 id="composer-title">发布动态</h2>
-        <form id="post-form" novalidate>
-          <label class="sr-only" for="post-content">动态内容</label>
-          <textarea
-            id="post-content"
-            name="content"
-            rows="5"
-            maxlength="280"
-            placeholder="记录进展、想法或待同步事项..."
-          ></textarea>
-          <div class="form-footer">
-            <p class="message" id="form-message" role="status" aria-live="polite"></p>
-            <div class="actions">
-              <span class="counter" id="content-counter">0 / 280</span>
-              <button type="submit">发布</button>
-            </div>
-          </div>
-        </form>
-      </section>
-
-      <section class="feed" aria-labelledby="feed-title">
-        <h2 id="feed-title">动态列表</h2>
-        <ul class="post-list" id="post-list"></ul>
-        <p class="empty-state" id="empty-state">还没有内容，发布第一条吧。</p>
-      </section>
-    </main>
-
-    <script src="app.js"></script>
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
   </body>
 </html>
