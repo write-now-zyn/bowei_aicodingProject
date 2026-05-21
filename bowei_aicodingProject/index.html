@@ -3,29 +3,29 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>简单微博</title>
+    <title>即时动态</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <main class="app-shell">
       <header class="app-header">
         <div>
-          <p class="eyebrow">Mini Weibo</p>
-          <h1>简单微博</h1>
+          <p class="eyebrow">Workspace Feed</p>
+          <h1>即时动态</h1>
         </div>
         <span class="post-count" id="post-count">0 条</span>
       </header>
 
       <section class="composer" aria-labelledby="composer-title">
-        <h2 id="composer-title">发布微博</h2>
+        <h2 id="composer-title">发布动态</h2>
         <form id="post-form" novalidate>
-          <label class="sr-only" for="post-content">微博内容</label>
+          <label class="sr-only" for="post-content">动态内容</label>
           <textarea
             id="post-content"
             name="content"
             rows="5"
             maxlength="280"
-            placeholder="分享一点新鲜事..."
+            placeholder="记录进展、想法或待同步事项..."
           ></textarea>
           <div class="form-footer">
             <p class="message" id="form-message" role="status" aria-live="polite"></p>
@@ -38,9 +38,9 @@
       </section>
 
       <section class="feed" aria-labelledby="feed-title">
-        <h2 id="feed-title">微博列表</h2>
+        <h2 id="feed-title">动态列表</h2>
         <ul class="post-list" id="post-list"></ul>
-        <p class="empty-state" id="empty-state">还没有微博，发布第一条吧。</p>
+        <p class="empty-state" id="empty-state">还没有内容，发布第一条吧。</p>
       </section>
     </main>
 

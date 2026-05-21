@@ -1,15 +1,17 @@
 :root {
   color-scheme: light;
-  --bg: #f7f8fb;
-  --panel: #ffffff;
-  --text: #172033;
-  --muted: #667085;
-  --line: #d8dee9;
-  --primary: #d9480f;
-  --primary-dark: #b83a09;
+  --bg: #eef3f7;
+  --panel: rgba(255, 255, 255, 0.7);
+  --panel-strong: rgba(255, 255, 255, 0.84);
+  --text: #18212f;
+  --muted: #657084;
+  --line: rgba(138, 151, 172, 0.28);
+  --primary: #c2410c;
+  --primary-dark: #9a3412;
   --focus: #2563eb;
   --danger: #b42318;
   --success: #067647;
+  --shadow: 0 24px 60px rgba(34, 43, 61, 0.14);
 }
 
 * {
@@ -19,10 +21,35 @@
 body {
   min-height: 100vh;
   margin: 0;
-  background: var(--bg);
+  background:
+    linear-gradient(120deg, rgba(255, 255, 255, 0.82), rgba(224, 242, 254, 0.44)),
+    linear-gradient(180deg, #f8fafc 0%, var(--bg) 48%, #e8eef4 100%);
   color: var(--text);
   font-family:
     -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+}
+
+body::before {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.28) 0,
+      rgba(255, 255, 255, 0.28) 1px,
+      transparent 1px,
+      transparent 80px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(75, 85, 99, 0.05) 0,
+      rgba(75, 85, 99, 0.05) 1px,
+      transparent 1px,
+      transparent 80px
+    );
+  content: "";
+  pointer-events: none;
 }
 
 button,
@@ -33,7 +60,7 @@ textarea {
 .app-shell {
   width: min(760px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 40px 0;
+  padding: 48px 0;
 }
 
 .app-header {
@@ -46,7 +73,7 @@ textarea {
 
 .eyebrow {
   margin: 0 0 4px;
-  color: var(--primary);
+  color: #0f766e;
   font-size: 13px;
   font-weight: 700;
   text-transform: uppercase;
@@ -75,7 +102,8 @@ h2 {
   padding: 8px 12px;
   border: 1px solid var(--line);
   border-radius: 999px;
-  background: var(--panel);
+  background: rgba(255, 255, 255, 0.58);
+  backdrop-filter: blur(18px);
   color: var(--muted);
   font-size: 14px;
   text-align: center;
@@ -86,7 +114,8 @@ h2 {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--panel);
-  box-shadow: 0 12px 30px rgba(16, 24, 40, 0.06);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(22px) saturate(130%);
 }
 
 .composer {
@@ -101,6 +130,7 @@ textarea {
   padding: 14px 16px;
   border: 1px solid var(--line);
   border-radius: 8px;
+  background: rgba(255, 255, 255, 0.64);
   color: var(--text);
   line-height: 1.6;
   outline: none;
@@ -108,6 +138,7 @@ textarea {
 
 textarea:focus {
   border-color: var(--focus);
+  background: rgba(255, 255, 255, 0.82);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.16);
 }
 
@@ -168,6 +199,7 @@ button:focus-visible {
 
 .feed {
   padding: 8px 0;
+  background: var(--panel-strong);
 }
 
 .feed h2 {
@@ -187,6 +219,7 @@ button:focus-visible {
   gap: 12px;
   padding: 18px 24px;
   border-top: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .avatar {
@@ -195,7 +228,7 @@ button:focus-visible {
   height: 44px;
   place-items: center;
   border-radius: 50%;
-  background: #1f2937;
+  background: linear-gradient(135deg, #0f172a, #0f766e);
   color: #ffffff;
   font-weight: 800;
 }

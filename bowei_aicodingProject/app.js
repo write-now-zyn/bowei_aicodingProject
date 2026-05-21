@@ -1,4 +1,4 @@
-const STORAGE_KEY = "mini-weibo-posts";
+const STORAGE_KEY = "local-feed-posts";
 const MAX_LENGTH = 280;
 
 const form = document.querySelector("#post-form");
@@ -19,7 +19,7 @@ form.addEventListener("submit", (event) => {
 
   const content = contentInput.value.trim();
   if (!content) {
-    setMessage("请输入微博内容。", "error");
+    setMessage("请输入动态内容。", "error");
     contentInput.focus();
     return;
   }
