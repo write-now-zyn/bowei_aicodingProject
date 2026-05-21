@@ -358,6 +358,46 @@ textarea:focus {
   line-height: 1.75;
 }
 
+.post-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.post-action-button {
+  display: inline-flex;
+  min-width: 92px;
+  min-height: 36px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: none;
+}
+
+.post-action-button:hover {
+  background: #ffffff;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+}
+
+.post-action-button.active {
+  border-color: rgba(0, 113, 227, 0.24);
+  background: rgba(0, 113, 227, 0.1);
+  color: var(--primary-dark);
+}
+
+.action-count {
+  min-width: 1ch;
+  font-variant-numeric: tabular-nums;
+}
+
 .empty-state {
   margin: 0;
   padding: 36px 28px;
@@ -425,6 +465,14 @@ textarea:focus {
 
   .post-card {
     grid-template-columns: 40px 1fr;
+  }
+
+  .post-actions {
+    gap: 8px;
+  }
+
+  .post-action-button {
+    flex: 1 1 120px;
   }
 
   .avatar {

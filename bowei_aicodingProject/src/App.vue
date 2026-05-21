@@ -37,6 +37,22 @@ async function publishPost() {
   }
 }
 
+async function toggleLike(post) {
+  const result = await feedStore.setPostLike(post.id, !post.liked);
+  if (!result.ok) {
+    statusMessage.value = result.message;
+    statusType.value = "error";
+  }
+}
+
+async function toggleFavorite(post) {
+  const result = await feedStore.setPostFavorite(post.id, !post.favorited);
+  if (!result.ok) {
+    statusMessage.value = result.message;
+    statusType.value = "error";
+  }
+}
+
 function formatTime(value) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) {
@@ -137,6 +153,28 @@ function formatTime(value) {
                 </time>
               </header>
               <p class="post-content">{{ post.content }}</p>
+              <div class="post-actions" aria-label="动态操作">
+                <button
+                  type="button"
+                  class="post-action-button"
+                  :class="{ active: post.liked }"
+                  :aria-pressed="post.liked ? 'true' : 'false'"
+                  @click="toggleLike(post)"
+                >
+                  <span>点赞</span>
+                  <span class="action-count">{{ post.likeCount ?? 0 }}</span>
+                </button>
+                <button
+                  type="button"
+                  class="post-action-button"
+                  :class="{ active: post.favorited }"
+                  :aria-pressed="post.favorited ? 'true' : 'false'"
+                  @click="toggleFavorite(post)"
+                >
+                  <span>收藏</span>
+                  <span class="action-count">{{ post.favoriteCount ?? 0 }}</span>
+                </button>
+              </div>
             </article>
           </li>
         </ul>

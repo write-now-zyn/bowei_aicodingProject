@@ -4,6 +4,8 @@ import { defineStore } from "pinia";
 const EMPTY_MESSAGE = "请输入动态内容。";
 const LOAD_ERROR_MESSAGE = "加载动态失败。";
 const PUBLISH_ERROR_MESSAGE = "发布失败，请稍后重试。";
+const LIKE_ERROR_MESSAGE = "点赞失败，请稍后重试。";
+const FAVORITE_ERROR_MESSAGE = "收藏失败，请稍后重试。";
 
 export const useFeedStore = defineStore("feed", () => {
   const posts = ref([]);
@@ -77,6 +79,50 @@ export const useFeedStore = defineStore("feed", () => {
     }
   }
 
+  async function setPostLike(postId, liked) {
+    return updatePostFlag(
+      postId,
+      "/like",
+      { liked },
+      LIKE_ERROR_MESSAGE,
+    );
+  }
+
+  async function setPostFavorite(postId, favorited) {
+    return updatePostFlag(
+      postId,
+      "/favorite",
+      { favorited },
+      FAVORITE_ERROR_MESSAGE,
+    );
+  }
+
+  async function updatePostFlag(postId, endpoint, body, fallbackMessage) {
+    try {
+      const response = await fetch(`/api/posts/${postId}${endpoint}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const data = await readResponseJson(response);
+
+      if (!response.ok) {
+        return { ok: false, message: getResponseMessage(data, fallbackMessage) };
+      }
+
+      if (!isValidPost(data?.post)) {
+        return { ok: false, message: fallbackMessage };
+      }
+
+      posts.value = posts.value.map((post) =>
+        post.id === postId ? data.post : post,
+      );
+      return { ok: true, post: data.post };
+    } catch (error) {
+      return { ok: false, message: fallbackMessage };
+    }
+  }
+
   return {
     posts,
     isLoading,
@@ -84,6 +130,8 @@ export const useFeedStore = defineStore("feed", () => {
     postCount,
     loadPosts,
     addPost,
+    setPostLike,
+    setPostFavorite,
   };
 });
 
@@ -100,8 +148,16 @@ function isValidPost(post) {
     post &&
     (typeof post.id === "string" || typeof post.id === "number") &&
     typeof post.content === "string" &&
-    typeof post.createdAt === "string"
+    typeof post.createdAt === "string" &&
+    typeof post.liked === "boolean" &&
+    typeof post.favorited === "boolean" &&
+    isCount(post.likeCount) &&
+    isCount(post.favoriteCount)
   );
+}
+
+function isCount(value) {
+  return Number.isInteger(value) && value >= 0;
 }
 
 function isValidPostsPayload(data) {
